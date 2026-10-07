@@ -19,10 +19,12 @@ public class Enemy : MonoBehaviour
     private bool isInvincible;
     private float invincibleCount;
     private bool visible = true;
+    private AudioSource aSource;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        aSource = GetComponent<AudioSource>();
         animator.SetInteger("Direction", direction);
         animator.SetFloat("Move", 0);
     }
@@ -49,6 +51,7 @@ public class Enemy : MonoBehaviour
             isWalking = false;
             elapsedTime = 0;
             animator.SetFloat("Move", 0);
+            aSource.Pause();
         }
         elapsedTime += Time.deltaTime;
 

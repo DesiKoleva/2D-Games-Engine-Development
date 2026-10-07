@@ -16,9 +16,12 @@ public class PlayerScript : MonoBehaviour
     private int score = 0;
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private GameManager gm;
+    [SerializeField] AudioClip throwSound;
+    [SerializeField] AudioClip collectSound;
     private int lives=3;
     private Vector2 lastPosition;
-
+    private AudioSource audioSource;
+    private bool playing = false;
      void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -55,8 +58,16 @@ public class PlayerScript : MonoBehaviour
         {
             direction = move.x < 0 ? -1 : 1;
             animator.SetInteger("Direction", direction);
-
-        }
+        if (move.x != 0 && !playing && !isJumping)
+            {
+                audioSource.Play();
+                playing = true;
+            }
+            if((move.x == 0 || isJumping)&& playing) 
+            {
+                audioSource.Pause();
+                playing = false;
+            }
         animator.SetFloat("Move", move.x);
         Debug.Log(jumpCount);
     }
@@ -82,6 +93,7 @@ public class PlayerScript : MonoBehaviour
             lives--;
             gm.updateLives(lives);
             rb.transform.position = lastPosition;
+
         }
     }
 
@@ -89,5 +101,7 @@ public class PlayerScript : MonoBehaviour
     {
         score++;
         gm.UpdateScore(score);
+        
+
     }
 }
